@@ -3,9 +3,10 @@
 ## Group Information
 - **Group Name:** MFMS
 - **Group Number:** Group 5
-- **Names & Student Numbers:** Alfeus Rosalia 224009893
- *Nangolo Drothea 223039985
- *Kakonda Aina 223098663
+- **Names & Student Numbers:**
+  - Alfeus Rosalia — 224009893
+  - Nangolo Drothea — 223039985
+  - Kakonda Aina — 223098663
 - **Course:** PAP521S – Programming in Practice
 - **Institution:** Namibia University of Science and Technology
 
