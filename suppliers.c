@@ -1,3 +1,9 @@
+// ==========================================================
+// Supplier Management Module
+// Developer: Nangolo Drothea
+// Student No: 223039985
+// Course: PAP521S – Programming in Practice
+// ==========================================================
 #include <stdio.h>
 #include <string.h>
 #include "suppliers.h"
@@ -5,103 +11,98 @@
 Supplier suppliers[MAX_SUPPLIERS];
 int supplierCount = 0;
 
-void handleSupplierMenu() {
-    int opt;
-    while (1) {
-        printf("\n--- SUPPLIER MANAGEMENT ---\n");
-        printf("1. Add Supplier\n");
-        printf("2. Display All Suppliers\n");
-        printf("3. Search Supplier\n");
-        printf("4. Back to Main Menu\n");
-        printf("Choice: ");
-
-        if (scanf("%d", &opt) != 1) {
-            printf("Enter a number!\n");
-            while(getchar() != '\n');
-            continue;
-        }
-
-        switch(opt) {
-            case 1: addSupplier(); break;
-            case 2: displayAllSuppliers(); break;
-            case 3: searchSupplier(); break;
-            case 4: return;
-            default: printf("Invalid option!\n");
-        }
-    }
-}
-
-void addSupplier() {
+void addSupplier(void) {
     if (supplierCount >= MAX_SUPPLIERS) {
-        printf("Supplier list full!\n");
+        printf("\n Supplier list is full!\n");
         return;
     }
 
     Supplier s;
-    printf("Enter Supplier ID: ");
-    scanf("%d", &s.id);
+    s.isActive = 1;
 
-    for (int i = 0; i < supplierCount; i++) {
-        if (suppliers[i].id == s.id) {
-            printf("ID already exists!\n");
-            return;
-        }
-    }
+    printf("\n--- Register New Supplier ---\n");
 
     printf("Supplier Name: ");
-    while(getchar() != '\n');
-    fgets(s.name, MAX_STR, stdin);
-    s.name[strcspn(s.name, "\n")] = 0;
-    if (strlen(s.name) == 0) {
-        printf("Name cannot be empty!\n");
-        return;
-    }
+    getchar();
+    fgets(s.name, MAX_NAME, stdin);
+    s.name[strcspn(s.name, "\n")] = '\0';
 
-    printf("Email: ");
-    fgets(s.email, MAX_STR, stdin);
-    s.email[strcspn(s.email, "\n")] = 0;
+    printf("Contact Person / Phone: ");
+    fgets(s.contact, MAX_CONTACT, stdin);
+    s.contact[strcspn(s.contact, "\n")] = '\0';
 
-    printf("Phone Number: ");
-    fgets(s.phone, 20, stdin);
-    s.phone[strcspn(s.phone, "\n")] = 0;
-
-    printf("Town/Location: ");
-    fgets(s.location, MAX_STR, stdin);
-    s.location[strcspn(s.location, "\n")] = 0;
+    printf("Service / Goods Provided: ");
+    fgets(s.service, MAX_NAME, stdin);
+    s.service[strcspn(s.service, "\n")] = '\0';
 
     suppliers[supplierCount++] = s;
-    printf("Supplier added successfully!\n");
+    printf("\n Supplier registered successfully! Total: %d\n", supplierCount);
 }
 
-void displayAllSuppliers() {
+void displayAllSuppliers(void) {
     if (supplierCount == 0) {
-        printf("No suppliers registered.\n");
+        printf("\n No suppliers registered yet.\n");
         return;
     }
-    printf("\n%5s | %-20s | %-25s | %-15s | %-15s\n",
-           "ID", "Name", "Email", "Phone", "Location");
-    printf("---------------------------------------------------------------\n");
+
+    printf("\n=== All Registered Suppliers (%d) ===\n", supplierCount);
     for (int i = 0; i < supplierCount; i++) {
-        printf("%5d | %-20s | %-25s | %-15s | %-15s\n",
-               suppliers[i].id, suppliers[i].name,
-               suppliers[i].email, suppliers[i].phone, suppliers[i].location);
+        printf("\nSupplier #%d\n", i + 1);
+        printf("  Name:    %s\n", suppliers[i].name);
+        printf("  Contact: %s\n", suppliers[i].contact);
+        printf("  Service: %s\n", suppliers[i].service);
     }
 }
 
-void searchSupplier() {
-    int searchId, found = 0;
-    printf("Enter Supplier ID to search: ");
-    scanf("%d", &searchId);
+void searchSupplier(void) {
+    char keyword[MAX_NAME];
+    int found = 0;
 
+    printf("\n--- Search Supplier ---\n");
+    printf("Enter name or keyword to search: ");
+    getchar();
+    fgets(keyword, MAX_NAME, stdin);
+    keyword[strcspn(keyword, "\n")] = '\0';
+
+    printf("\n--- Search Results ---\n");
     for (int i = 0; i < supplierCount; i++) {
-        if (suppliers[i].id == searchId) {
-            printf("\n Supplier Found:\n");
-            printf("Name: %s\nEmail: %s\nPhone: %s\nLocation: %s\n",
-                   suppliers[i].name, suppliers[i].email,
-                   suppliers[i].phone, suppliers[i].location);
+        if (strstr(suppliers[i].name, keyword) != NULL ||
+            strstr(suppliers[i].service, keyword) != NULL) {
+            printf("\n Found Supplier #%d\n", i + 1);
+            printf("  Name:    %s\n", suppliers[i].name);
+            printf("  Contact: %s\n", suppliers[i].contact);
+            printf("  Service: %s\n", suppliers[i].service);
             found = 1;
-            break;
         }
     }
-    if (!found) printf("No supplier with ID %d\n", searchId);
+
+    if (!found) {
+        printf("\n No supplier matching '%s' found.\n", keyword);
+    }
+}
+
+void handleSupplierMenu(void) {
+    int choice;
+    while (1) {
+        printf("\n\n=== SUPPLIER MANAGEMENT — Nangolo Drothea (223039985) ===\n");
+        printf("1. Register New Supplier\n");
+        printf("2. Display All Suppliers\n");
+        printf("3. Search Supplier\n");
+        printf("4. Back to Main Menu\n");
+        printf("Enter your choice: ");
+
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            printf("Please enter a valid number.\n");
+            continue;
+        }
+
+        switch (choice) {
+            case 1: addSupplier(); break;
+            case 2: displayAllSuppliers(); break;
+            case 3: searchSupplier(); break;
+            case 4: return;
+            default: printf("Invalid choice. Try again.\n");
+        }
+    }
 }
